@@ -29,7 +29,7 @@ module reg_dst_mux(
 		output wire[4:0] reg_dst
     );
 
-assign reg_out = (WriteRegSrc == `WRITE_REG_RT    ) ? rt :
+assign reg_dst = (WriteRegSrc == `WRITE_REG_RT    ) ? rt :
        			 (WriteRegSrc == `WRITE_REG_RD    ) ? rd :
        			 (WriteRegSrc == `WRITE_REG_31) ? `REG_31_ADDR : `INIT_32;
 endmodule

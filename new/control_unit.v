@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`include "const_header.vh"
+`include "const.vh"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -33,13 +33,13 @@ module control_unit(
     output [`PFU_OP_LENGTH-1:0] PCsrc,
     output [`WDATA_SRC_LENGTH-1:0] WriteDataSrc,
     output [`REG_DST_LENGTH-1:0] WriteRegSrc,
-    output DataMemWe,
+    output wire DataMemWe,
     output [4:0] ALUop,
     output [`ALUopnd1_LENGTH-1:0] ALUopnd1src,
     output [`ALUopnd2_LENGTH-1:0]ALUopnd2src,
-    output RegWE,
+    output wire RegWE,
     output [`EXTEND_LENGTH:0]ExtOp,
-    output pause_out
+    output wire pause_out
     );
     
     wire instr_add, instr_addu, instr_and, instr_jr, instr_jalr;

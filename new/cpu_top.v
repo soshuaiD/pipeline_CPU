@@ -44,7 +44,7 @@ PC U_PC(
 wire[31:0] instruction;
 
 IMem U_IMem(
-	.instruction_addr(PCin),
+	.instruction_addr(PCout),
 
 	.instruction(instruction)
 	);
@@ -104,26 +104,13 @@ reg_file u_reg_file(
     .pause(pause)
     );
 
-wire[31:0] PCplus8;
-
-PFU u_PFU(
-	.PCold(PCout),
-	.imm_16(imm_16),
-	.imm_26(instr_index),
-	.rs_data(reg_data1),
-	.PCsrc(PCsrc),
-
-	.PCnew(PCin),
-	.PCplus8(PCplus8)
-	);
-
-wire[`ALU_OP_LENGTH-1:0] branch_control;
+wire[`ALU_OP_LENGTH-1:0] ALU_op;
 wire[`BRANCH_LENGTH-1:0] zero;
 branch_judge u_branch_judge(
         .rs_data(reg_data1),
         .rt_data(reg_data2),
         
-        .branch_control(branch_control),
+        .branch_control(ALU_op),
         .result(zero)
     );
 
@@ -149,13 +136,26 @@ control_unit u_control_unit(
     .WriteDataSrc(WriteDataSrc),
     .WriteRegSrc(WriteRegSrc),
     .DataMemWe(DataMemWe),
-    .ALUop(branch_control),
+    .ALUop(ALU_op),
     .ALUopnd1src(ALUopnd1src),
     .ALUopnd2src(ALUopnd2src),
     .RegWE(RegWE),
     .ExtOp(ExtOp),
     .pause_out(pause_out)
     );
+
+wire[31:0] PCplus8;
+
+PFU u_PFU(
+	.PCold(PCout),
+	.imm_16(imm_16),
+	.imm_26(instr_index),
+	.rs_data(reg_data1),
+	.PCsrc(PCsrc),
+
+	.PCnew(PCin),
+	.PCplus8(PCplus8)
+	);
 
 wire[4:0] reg_dst;
 
@@ -191,7 +191,7 @@ ID_EXE u_ID_EXE(
     .clk(clk),
     .rst(rst),
     .WriteDataSrc_in(WriteDataSrc),
-    .alu_op_in(ALUop),
+    .alu_op_in(ALU_op),
     .ALUopnd1src_in(ALUopnd1src),
     .ALUopnd2src_in(ALUopnd2src),
     .DataMemWE_in(DataMemWe),

@@ -28,6 +28,9 @@ module dataMem(
     output wire[31:0] DataMemOut
     );
     reg[31:0] data_mem[1023:0];
+    initial begin
+        $readmemb("D://d.txt",data_mem);
+    end
     assign DataMemOut = data_mem[DataMemAddr[11:2]];
 
     always @(posedge clk) begin

@@ -27,6 +27,10 @@ module IMem(
     );
 reg[31:0] imem[`IM_LENGTH:0];
 
+initial begin
+$readmemb("D://i.txt",imem);
+end
+
 assign instruction = imem[instruction_addr];
 
 endmodule
