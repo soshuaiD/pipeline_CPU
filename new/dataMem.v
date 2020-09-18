@@ -29,7 +29,7 @@ module dataMem(
     );
     reg[31:0] data_mem[1023:0];
     initial begin
-        $readmemb("D://d.txt",data_mem);
+        $readmemh("D://d.txt",data_mem);
     end
     assign DataMemOut = data_mem[DataMemAddr[11:2]];
 
