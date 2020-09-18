@@ -31,7 +31,7 @@ module cpu_top(
 //include module: PC , PFU , IMem   
 wire [31:0] PCin;
 wire [31:0] PCout;
-wire pause;
+wire pause_out;
 
 PC U_PC(
 	.clk(clk),
@@ -44,7 +44,7 @@ PC U_PC(
 wire[31:0] instruction;
 
 IMem U_IMem(
-	.instruction_addr(PCout),
+	.instruction_addr(PCout[11:2]),
 
 	.instruction(instruction)
 	);
@@ -55,7 +55,7 @@ IF_ID U_IF_ID(
 	.clk(clk),
 	.rst(rst),
 	.InstIn(instruction),
-	.pause(pause),
+	.pause(pause_out),
 
 	.InstOut(instruction_out)
 	);
@@ -72,7 +72,7 @@ wire [5:0] func;
 wire [15:0] imm_16;
 
 instr_decoder u_instr_decoder(
-	.InstIn(InstOut),
+	.InstIn(instruction_out),
     
     .instr_index(instr_index),
     .opcode(opcode),
@@ -89,6 +89,7 @@ wire [4:0] write_addr;
 wire [4:0] write_data;
 wire [31:0] reg_data1;
 wire [31:0] reg_data2;
+wire [`PAUSE_LENGTH-1:0 ] pause;
 
 reg_file u_reg_file(
     .clk(clk),
@@ -122,7 +123,8 @@ wire [`ALUopnd1_LENGTH-1:0] ALUopnd1src;
 wire [`ALUopnd2_LENGTH-1:0] ALUopnd2src;
 wire RegWE;
 wire [`EXTEND_LENGTH:0] ExtOp;
-wire pause_out;
+
+
 
 control_unit u_control_unit(
     .opcode(opcode),

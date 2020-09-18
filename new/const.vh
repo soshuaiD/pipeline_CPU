@@ -130,6 +130,7 @@
 `define BRANCH_LT           2'b10
 `define BRANCH_GT           2'b11
 
+`define PAUSE_LENGTH		2
 `define PAUSE_NO            2'b00
 `define PAUSE_RS            2'b01
 `define PAUSE_RT            2'b10
