@@ -107,8 +107,9 @@ module control_unit(
                             (instr_jalr || instr_jal)? `WDATA_SRC_PCplus8:
                             (instr_lw)? `WDATA_SRC_DMEM: `WDATA_SRC_ALU;
 
-    // assign DataMemWE = (instr_sw)? 1:0;   
-    assign DataMemWe = 1;
+    assign DataMemWe = instr_sw;
+    wire zhc = instr_sw;            //zhc yyyds,此处感谢大哥帮我们debug
+    // assign DataMemWe = 1;
     
     assign ALUop = (instr_add || instr_addu || instr_addi ||
                       instr_addiu || instr_aui || instr_lui ||
@@ -184,5 +185,6 @@ module control_unit(
                          &&(pause_in==`PAUSE_RS))? 1:
                        ((instr_sll||instr_srl||instr_sra)
                          &&(pause_in==`PAUSE_RT))? 1:0;
+
                                       
 endmodule
