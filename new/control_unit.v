@@ -34,11 +34,11 @@ module control_unit(
     output [`WDATA_SRC_LENGTH-1:0] WriteDataSrc,
     output [`REG_DST_LENGTH-1:0] WriteRegSrc,
     output wire DataMemWe,
-    output [4:0] ALUop,
+    output [`ALU_OP_LENGTH-1:0] ALUop,
     output [`ALUopnd1_LENGTH-1:0] ALUopnd1src,
     output [`ALUopnd2_LENGTH-1:0]ALUopnd2src,
     output wire RegWE,
-    output [`EXTEND_LENGTH:0]ExtOp,
+    output [`EXTEND_LENGTH-1:0]ExtOp,
     output wire pause_out
     );
     
@@ -105,7 +105,7 @@ module control_unit(
                             (instr_jalr || instr_jal)? `WDATA_SRC_PCplus8:
                             (instr_lw)? `WDATA_SRC_DMEM: `WDATA_SRC_ALU;
 
-    assign DataMemWE = (instr_sw)? 1:0;   
+    assign DataMemWE = (opcode==`INSTR_SW)? 1:0;   
     
     assign ALUop = (instr_add || instr_addu || instr_addi ||
                       instr_addiu || instr_aui || instr_lui ||

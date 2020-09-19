@@ -38,7 +38,18 @@ module reg_file(
     reg [4:0] buffer2;
     reg [4:0] buffer3;
     reg [31:0] registers [31:0];
-    
+
+    integer i;
+    always @(posedge clk) begin
+        if (!rst) begin
+            // reset
+          for(i=0;i<32;i=i+1)
+          begin
+              registers[i]=`INIT_32;
+          end
+        end
+    end
+
     always @(posedge clk or negedge rst)
     begin
         if (!rst)

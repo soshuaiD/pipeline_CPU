@@ -84,9 +84,12 @@ instr_decoder u_instr_decoder(
     .immediate(imm_16)
 	);
 
+
+wire [4:0]  reg_write_addr_out3;
+
 wire reg_we;
-wire [4:0] write_addr;
-wire [4:0] write_data;
+// wire [4:0] write_addr;
+wire [31:0] write_data;
 wire [31:0] reg_data1;
 wire [31:0] reg_data2;
 wire [`PAUSE_LENGTH-1:0 ] pause;
@@ -97,7 +100,7 @@ reg_file u_reg_file(
     .read_addr1(rs),
     .read_addr2(rt),
     .reg_we(reg_we),
-    .write_addr(write_addr),
+    .write_addr(reg_write_addr_out3),
     .write_data(write_data),
 
     .read_data1(reg_data1),
@@ -112,7 +115,7 @@ branch_judge u_branch_judge(
         .rt_data(reg_data2),
         
         .branch_control(ALU_op),
-        .result(zero)
+        .zero(zero)
     );
 
 wire[`PFU_OP_LENGTH-1:0] PCsrc;
@@ -121,8 +124,7 @@ wire [`REG_DST_LENGTH-1:0] WriteRegSrc;
 wire DataMemWe;
 wire [`ALUopnd1_LENGTH-1:0] ALUopnd1src;
 wire [`ALUopnd2_LENGTH-1:0] ALUopnd2src;
-wire RegWE;
-wire [`EXTEND_LENGTH:0] ExtOp;
+wire [`EXTEND_LENGTH-1:0] ExtOp;
 
 
 
@@ -141,7 +143,7 @@ control_unit u_control_unit(
     .ALUop(ALU_op),
     .ALUopnd1src(ALUopnd1src),
     .ALUopnd2src(ALUopnd2src),
-    .RegWE(RegWE),
+    .RegWE(reg_we),
     .ExtOp(ExtOp),
     .pause_out(pause_out)
     );
@@ -178,7 +180,7 @@ extend u_extend(
 	.ext_data(ext_data)
 	);
 
- wire [1:0] WriteDataSrc_out1;
+ wire [`WDATA_SRC_LENGTH:0] WriteDataSrc_out1;
  wire DataMemWE_out1;
  wire [3:0] alu_op_out;
  wire [1:0] ALUopnd1src_out;
@@ -232,7 +234,7 @@ ID_EXE u_ID_EXE(
 wire[31:0] ALU_opnd2;
 
 ALU_opnd2_mux u_ALU_opnd2_mux(
-		.regData(reg2data_out),
+		.regData(reg2data_out1),
 		.imm_32(extended_data_out),
 		.ALUopnd2src(ALUopnd2src_out),
 
@@ -259,8 +261,8 @@ EXE_MEM u_EXE_MEM(
     .clk(clk),
     .rst(rst),
     .DataMemWE(DataMemWE_out1),
-    .pauseOut(pause_out), 
-    .WriteDataSrc(WriteDataSrc), 
+    .pause(pause_out), 
+    .WriteDataSrc(WriteDataSrc_out1), 
     .ALURes(ALURes),
     .Reg2DataOut(reg2data_out1),
     .WriteRegSrc(reg_write_addr_out1),
@@ -286,8 +288,8 @@ dataMem u_dataMem(
 wire [31:0] dataMemOut;
 wire [31:0] ALUResOut;
 wire [31:0] PCplus8Out;
-wire [1:0]  WriteDataSrc_out3;
-wire [4:0]  reg_write_addr_out3;
+wire [`WDATA_SRC_DEFAULT-1:0]  WriteDataSrc_out3;
+
 
 MEM_WB u_MEM_WB(
 	.clk(clk),

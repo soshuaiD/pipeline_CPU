@@ -23,10 +23,10 @@
 module ID_EXE(
     input clk,
     input rst,
-    input [1:0] WriteDataSrc_in,
-    input [3:0] alu_op_in,
-    input [1:0] ALUopnd1src_in,
-    input [1:0] ALUopnd2src_in,
+    input [`WDATA_SRC_LENGTH-1:0] WriteDataSrc_in,
+    input [`ALU_OP_LENGTH-1:0] alu_op_in,
+    input [`ALUopnd1_LENGTH-1:0] ALUopnd1src_in,
+    input [`ALUopnd2_LENGTH-1:0] ALUopnd2src_in,
     input DataMemWE_in,
     input pause,
     

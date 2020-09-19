@@ -24,11 +24,11 @@ module branch_judge(
         input [31:0] rs_data,
         input [31:0] rt_data,
         
-        input [4:0] branch_control,
-        output [1:0] result
+        input [`ALU_OP_LENGTH-1:0] branch_control,
+        output [1:0] zero
     );
     assign rt_data = (branch_control==`ALU_OP_CMP0)? `INIT_32:rt_data;
-    assign result = (rs_data == rt_data)? `BRANCH_EQUAL:
+    assign zero = (rs_data == rt_data)? `BRANCH_EQUAL:
                     (rs_data < rt_data)? `BRANCH_LT:
                     (rs_data > rt_data)? `BRANCH_GT:`BRANCH_DEFAULT;
     /*

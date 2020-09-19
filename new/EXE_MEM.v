@@ -25,28 +25,28 @@ module EXE_MEM(
     input clk,
     input rst,
     input DataMemWE,
-    input pauseOut, 
-    input WriteDataSrc, 
+    input pause, 
+    input [`WDATA_SRC_LENGTH-1:0]WriteDataSrc, 
     input [31:0]ALURes,
     input [31:0]Reg2DataOut,
-    input WriteRegSrc,
+    input [4:0]WriteRegSrc,
 
     output reg DataMemWE_out,
-    output reg WriteDataSrc_out,
+    output reg [`WDATA_SRC_LENGTH-1:0] WriteDataSrc_out,
     output reg [31:0]ALURes_out,
-    output reg WriteRegSrc_out,
+    output reg [4:0]WriteRegSrc_out,
     output reg [31:0]Reg2DataOut_out
     
 );
 
 always @ (posedge clk) begin
-    if (!rst) begin
+    if (!rst || pause) begin
         DataMemWE_out    <= 1'b0;
-        WriteDataSrc_out <= 1'b0;
+        WriteDataSrc_out <= `INIT_2;
         ALURes_out       <= `INIT_32;
         WriteRegSrc_out  <= `INIT_32;
         Reg2DataOut_out  <= `INIT_32;
-    end else if (pauseOut) begin
+    end else if (!pause) begin
         DataMemWE_out    <= DataMemWE;
         WriteDataSrc_out <= WriteDataSrc;
         ALURes_out       <= ALURes;

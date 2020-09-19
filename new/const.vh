@@ -32,12 +32,6 @@
 `define SIGN_EXTEND         2'b10
 `define SHIFT               2'b11
 
-`define WDATA_SRC_LENGTH	2
-`define WDATA_SRC_DEFAULT   2'b00
-`define WDATA_SRC_ALU       2'b01
-`define WDATA_SRC_DMEM      2'b10
-`define WDATA_SRC_PC        2'b11
-
 `define ALU_OP_LENGTH		4
 `define ALU_OP_DEFAULT      4'b0000
 `define ALU_OP_ADD          4'b0001
