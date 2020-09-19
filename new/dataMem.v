@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "const.vh"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -22,7 +23,7 @@
 
 module dataMem(
     input wire clk,
-    input wire DataMemWE,
+    input wire DataMemWe,
     input wire[31:0] DataMemAddr,
     input wire[31:0] DataMemIn,
     output wire[31:0] DataMemOut
@@ -34,8 +35,11 @@ module dataMem(
     assign DataMemOut = data_mem[DataMemAddr[11:2]];
 
     always @(posedge clk) begin
-        if (DataMemWE) begin
+        if (DataMemWe) begin
             data_mem[DataMemAddr[11:2]] <= DataMemIn;
+        end
+        else begin
+            data_mem[DataMemAddr[11:2]] <= `INIT_32;
         end
     end
 endmodule

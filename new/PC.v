@@ -8,16 +8,20 @@ module PC(
     input wire [31:0] PCin,
     input wire pause,
 
-    output reg[31:0] PCout
+    output wire[31:0] PCout
 );
 
+reg [31:0] PC;
+
 always @ (posedge clk or posedge rst) begin
-    if(!rst || pause) begin
-        PCout = `INIT_32;
+    if(!rst) begin
+        PC = `INIT_32;
     end
     //when reading continue
-    else begin
-    	PCout = PCin;
+    else if(!pause)begin
+        PC = PCin;
     end
 end
+
+assign PCout=PC ;
 endmodule
