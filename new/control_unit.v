@@ -61,7 +61,8 @@ module control_unit(
     assign instr_movz = (opcode==`SPECIAL_OPCODE && func==`FUNC_MOVZ)? 1:0;
    
     assign instr_sll = (opcode==`SPECIAL_OPCODE && func==`FUNC_NOP_SLL)? 1:0;
-    
+    assign instr_nop = (opcode==`SPECIAL_OPCODE && func==`FUNC_NOP_SLL)? 1:0;
+
     assign instr_nor = (opcode==`SPECIAL_OPCODE && func==`FUNC_NOR)? 1:0;
     assign instr_or = (opcode==`SPECIAL_OPCODE && func==`FUNC_OR)? 1:0;
     assign instr_sllv = (opcode==`SPECIAL_OPCODE && func==`FUNC_SLLV)? 1:0;
@@ -80,6 +81,7 @@ module control_unit(
     assign instr_andi = (opcode==`INSTR_ANDI)? 1:0;
     assign instr_aui = (opcode==`INSTR_AUI)? 1:0;
     
+    assign instr_b = (opcode==`INSTR_B_BEQ && rt_code==`INIT_5 && rd_zero==`INIT_5)?1:0;
     assign instr_beq = (opcode==`INSTR_B_BEQ)? 1:0;
     
     assign instr_bne = (opcode==`INSTR_BNE)? 1:0;
@@ -98,14 +100,15 @@ module control_unit(
     assign instr_j = (opcode==`INSTR_J)? 1:0;
     assign instr_jal = (opcode==`INSTR_JAL)? 1:0;
     
-    assign WriteDataSrc = (instr_jr || instr_b || instr_beq || 
+    assign WriteDataSrc =   (instr_jr || instr_b || instr_beq || 
                             instr_bne || instr_bltz || instr_blez || 
                             instr_bgtz || instr_bgez || instr_sw || 
                             instr_bc || instr_j)? `WDATA_SRC_DEFAULT:
                             (instr_jalr || instr_jal)? `WDATA_SRC_PCplus8:
                             (instr_lw)? `WDATA_SRC_DMEM: `WDATA_SRC_ALU;
 
-    assign DataMemWE = (opcode==`INSTR_SW)? 1:0;   
+    // assign DataMemWE = (instr_sw)? 1:0;   
+    assign DataMemWe = 1;
     
     assign ALUop = (instr_add || instr_addu || instr_addi ||
                       instr_addiu || instr_aui || instr_lui ||

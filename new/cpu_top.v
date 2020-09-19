@@ -108,13 +108,13 @@ reg_file u_reg_file(
     .pause(pause)
     );
 
-wire[`ALU_OP_LENGTH-1:0] ALU_op;
+
 wire[`BRANCH_LENGTH-1:0] zero;
 branch_judge u_branch_judge(
         .rs_data(reg_data1),
         .rt_data(reg_data2),
-        
-        .branch_control(ALU_op),
+        // .branch_control(ALUop),
+
         .zero(zero)
     );
 
@@ -125,7 +125,7 @@ wire DataMemWe;
 wire [`ALUopnd1_LENGTH-1:0] ALUopnd1src;
 wire [`ALUopnd2_LENGTH-1:0] ALUopnd2src;
 wire [`EXTEND_LENGTH-1:0] ExtOp;
-
+wire[`ALU_OP_LENGTH-1:0] ALUop;
 
 
 control_unit u_control_unit(
@@ -140,7 +140,7 @@ control_unit u_control_unit(
     .WriteDataSrc(WriteDataSrc),
     .WriteRegSrc(WriteRegSrc),
     .DataMemWe(DataMemWe),
-    .ALUop(ALU_op),
+    .ALUop(ALUop),
     .ALUopnd1src(ALUopnd1src),
     .ALUopnd2src(ALUopnd2src),
     .RegWE(reg_we),
@@ -195,7 +195,7 @@ ID_EXE u_ID_EXE(
     .clk(clk),
     .rst(rst),
     .WriteDataSrc_in(WriteDataSrc),
-    .alu_op_in(ALU_op),
+    .alu_op_in(ALUop),
     .ALUopnd1src_in(ALUopnd1src),
     .ALUopnd2src_in(ALUopnd2src),
     .DataMemWE_in(DataMemWe),
