@@ -94,6 +94,7 @@ wire [31:0] write_data;
 wire [31:0] reg_data1;
 wire [31:0] reg_data2;
 wire [`PAUSE_LENGTH-1:0 ] pause;
+wire[4:0] reg_dst;
 
 reg_file u_reg_file(
     .clk(clk),
@@ -102,6 +103,7 @@ reg_file u_reg_file(
     .read_addr2(rt),
     .reg_we(reg_we),
     .write_addr(reg_write_addr_out3),
+    .collision_addr(reg_dst),
     .write_data(write_data),
 
     .read_data1(reg_data1),
@@ -162,7 +164,7 @@ PFU u_PFU(
 	.PCplus8(PCplus8)
 	);
 
-wire[4:0] reg_dst;
+
 
 reg_dst_mux u_reg_dst_mux(
 	.rt(rt),

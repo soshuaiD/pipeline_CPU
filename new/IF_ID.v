@@ -26,15 +26,19 @@ module IF_ID(
    		input wire[31:0] InstIn,
    		input wire pause,
 
-   		output reg[31:0] InstOut
+   		output wire[31:0] InstOut
     );
 
+reg [31:0] Inst;
+
 always @(posedge clk) begin
-	if (!rst || pause) begin
-		InstOut = `INIT_32;
+	if (!rst) begin
+		Inst <= `INIT_32;
 	end
-	else begin
-		InstOut = InstIn;
+	else if(!pause) begin
+		Inst <= InstIn;
 	end
 end
+
+assign InstOut = Inst;
 endmodule

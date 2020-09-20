@@ -27,6 +27,7 @@ module reg_file(
     input [4:0] read_addr2,
     input reg_we,
     input [4:0] write_addr,
+    input [4:0] collision_addr,
     input [31:0] write_data,
 
     output [31:0] read_data1,
@@ -50,7 +51,7 @@ module reg_file(
         end
     end
 
-    always @(posedge clk or negedge rst)
+    always @(posedge clk)
     begin
         if (!rst)
         begin 
@@ -60,7 +61,7 @@ module reg_file(
         end
         else
         begin
-            buffer1 <= write_addr;
+            buffer1 <= collision_addr;
             buffer2 <= buffer1;
             buffer3 <= buffer2;
         end

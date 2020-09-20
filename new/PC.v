@@ -19,9 +19,10 @@ always @ (posedge clk) begin
     end
     //when reading continue
     else if(!pause)begin
-        PC = PCin;
+        PC <= PCin;
     end
 end
 
 assign PCout = PC ;
+wire zgz = PC;
 endmodule
