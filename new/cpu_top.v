@@ -264,7 +264,7 @@ EXE_MEM u_EXE_MEM(
     .clk(clk),
     .rst(rst),
     .DataMemWE(DataMemWe_out1),
-    .pause(pause_out), 
+    // .pause(pause_out), 
     .WriteDataSrc(WriteDataSrc_out1), 
     .ALURes(ALURes),
     .Reg2DataOut(reg2data_out1),

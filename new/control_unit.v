@@ -61,7 +61,7 @@ module control_unit(
     assign instr_movz = (opcode==`SPECIAL_OPCODE && func==`FUNC_MOVZ)? 1:0;
    
     assign instr_sll = (opcode==`SPECIAL_OPCODE && func==`FUNC_NOP_SLL)? 1:0;
-    assign instr_nop = (opcode==`SPECIAL_OPCODE && func==`FUNC_NOP_SLL)? 1:0;
+    assign instr_nop = (opcode==`SPECIAL_OPCODE &&rt_code == `INIT_5&&rd_zero == `INIT_5 && func==`FUNC_NOP_SLL)? 1:0;
 
     assign instr_nor = (opcode==`SPECIAL_OPCODE && func==`FUNC_NOR)? 1:0;
     assign instr_or = (opcode==`SPECIAL_OPCODE && func==`FUNC_OR)? 1:0;
