@@ -13,7 +13,7 @@ module PC(
 
 reg [31:0] PC;
 
-always @ (posedge clk or posedge rst) begin
+always @ (posedge clk) begin
     if(!rst) begin
         PC = `INIT_32;
     end
@@ -23,5 +23,5 @@ always @ (posedge clk or posedge rst) begin
     end
 end
 
-assign PCout=PC ;
+assign PCout = PC ;
 endmodule

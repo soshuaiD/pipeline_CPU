@@ -29,7 +29,7 @@ module IF_ID(
    		output reg[31:0] InstOut
     );
 
-always @(posedge clk or posedge rst) begin
+always @(posedge clk) begin
 	if (!rst || pause) begin
 		InstOut = `INIT_32;
 	end
