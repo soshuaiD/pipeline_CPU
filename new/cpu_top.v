@@ -88,20 +88,20 @@ instr_decoder u_instr_decoder(
 
 wire [4:0]  reg_write_addr_out3;
 
-wire reg_we;
 // wire [4:0] write_addr;
 wire [31:0] write_data;
 wire [31:0] reg_data1;
 wire [31:0] reg_data2;
 wire [`PAUSE_LENGTH-1:0 ] pause;
 wire[4:0] reg_dst;
+wire RegWE_out3;
 
 reg_file u_reg_file(
     .clk(clk),
     .rst(rst),
     .read_addr1(rs),
     .read_addr2(rt),
-    .reg_we(reg_we),
+    .RegWE(RegWE_out3),
     .write_addr(reg_write_addr_out3),
     .collision_addr(reg_dst),
     .write_data(write_data),
@@ -121,6 +121,7 @@ branch_judge u_branch_judge(
         .zero(zero)
     );
 
+wire RegWE;
 wire[`PFU_OP_LENGTH-1:0] PCsrc;
 wire [`WDATA_SRC_LENGTH-1:0] WriteDataSrc;
 wire [`REG_DST_LENGTH-1:0] WriteRegSrc;
@@ -129,7 +130,6 @@ wire [`ALUopnd1_LENGTH-1:0] ALUopnd1src;
 wire [`ALUopnd2_LENGTH-1:0] ALUopnd2src;
 wire [`EXTEND_LENGTH-1:0] ExtOp;
 wire[`ALU_OP_LENGTH-1:0] ALUop;
-
 
 control_unit u_control_unit(
     .opcode(opcode),
@@ -146,7 +146,7 @@ control_unit u_control_unit(
     .ALUop(ALUop),
     .ALUopnd1src(ALUopnd1src),
     .ALUopnd2src(ALUopnd2src),
-    .RegWE(reg_we),
+    .RegWE(RegWE),
     .ExtOp(ExtOp),
     .pause_out(pause_out)
     );
@@ -183,16 +183,17 @@ extend u_extend(
 	.ext_data(ext_data)
 	);
 
- wire [`WDATA_SRC_LENGTH-1:0] WriteDataSrc_out1;
- wire DataMemWe_out1;
- wire [3:0] alu_op_out;
- wire [1:0] ALUopnd1src_out;
- wire [1:0] ALUopnd2src_out;
- wire [31:0] reg1data_out;
- wire [31:0] reg2data_out1;
- wire [4:0] reg_write_addr_out1;
- wire [4:0] sa_out;
- wire [31:0] extended_data_out;
+wire RegWE_out1;
+wire [`WDATA_SRC_LENGTH-1:0] WriteDataSrc_out1;
+wire DataMemWe_out1;
+wire [3:0] alu_op_out;
+wire [1:0] ALUopnd1src_out;
+wire [1:0] ALUopnd2src_out;
+wire [31:0] reg1data_out;
+wire [31:0] reg2data_out1;
+wire [4:0] reg_write_addr_out1;
+wire [4:0] sa_out;
+wire [31:0] extended_data_out;
 
 ID_EXE u_ID_EXE(
     .clk(clk),
@@ -208,6 +209,7 @@ ID_EXE u_ID_EXE(
     .reg_write_addr_in(reg_dst),
     .sa_in(sa),
     .extended_data_in(ext_data),
+    .RegWE(RegWE),
     
     .WriteDataSrc_out(WriteDataSrc_out1),
     .DataMemWE_out(DataMemWe_out1),
@@ -218,7 +220,8 @@ ID_EXE u_ID_EXE(
     .reg2data_out(reg2data_out1),
     .reg_write_addr_out(reg_write_addr_out1),
     .sa_out(sa_out),
-    .extended_data_out(extended_data_out)
+    .extended_data_out(extended_data_out),
+    .RegWE_out(RegWE_out1)
     );
 
 
@@ -259,6 +262,7 @@ ALU u_ALU(
  wire[31:0] ALURes_out;
  wire [31:0] reg2data_out2;
  wire [4:0] reg_write_addr_out2;
+ wire RegWE_out2;
 
 EXE_MEM u_EXE_MEM(
     .clk(clk),
@@ -269,12 +273,14 @@ EXE_MEM u_EXE_MEM(
     .ALURes(ALURes),
     .Reg2DataOut(reg2data_out1),
     .WriteRegSrc(reg_write_addr_out1),
+    .RegWE(RegWE_out1),
 
     .DataMemWE_out(DataMemWe_out2),
     .WriteDataSrc_out(WriteDataSrc_out2),
     .ALURes_out(ALURes_out),
     .WriteRegSrc_out(reg_write_addr_out2),
-    .Reg2DataOut_out(reg2data_out2)
+    .Reg2DataOut_out(reg2data_out2),
+    .RegWE_out(RegWE_out2)
 );
 
 wire[31:0] dataMem;
@@ -302,12 +308,14 @@ MEM_WB u_MEM_WB(
     .PCplus8In(PCplus8),
     .WriteDataSrcIn(WriteDataSrc_out2),
     .WriteRegAddrIn(reg_write_addr_out2),
+    .RegWE(RegWE_out2),
 
     .dataMemOut(dataMemOut),
     .ALUResOut(ALUResOut),
     .PCplus8Out(PCplus8Out),
     .WriteDataSrcOut(WriteDataSrc_out3),
-    .WriteRegAddrOut(reg_write_addr_out3)
+    .WriteRegAddrOut(reg_write_addr_out3),
+    .RegWE_out(RegWE_out3)
 	);
 
 

@@ -35,6 +35,7 @@ module ID_EXE(
     input [4:0] reg_write_addr_in,
     input [4:0] sa_in,
     input [31:0] extended_data_in,
+    input RegWE,
     
     output [1:0] WriteDataSrc_out,
     output DataMemWE_out,
@@ -45,7 +46,8 @@ module ID_EXE(
     output [31:0] reg2data_out,
     output [4:0] reg_write_addr_out,
     output [4:0] sa_out,
-    output [31:0] extended_data_out
+    output [31:0] extended_data_out,
+    output wire RegWE_out
     );
     
     reg [1:0] WriteDataSrc;
@@ -59,8 +61,9 @@ module ID_EXE(
     reg [4:0] reg_write_addr;
     reg [4:0] sa;
     reg [31:0] extended_data;
+    reg RegWE_temp;
     
-    always @(posedge clk or negedge rst)
+    always @(posedge clk)
     begin
         if (!rst||pause) 
         begin
@@ -75,6 +78,7 @@ module ID_EXE(
             reg_write_addr <= `INIT_5;
             sa <= `INIT_5;
             extended_data <= `INIT_5;
+            RegWE_temp <= 1'b0;
         end
         else
         begin
@@ -89,6 +93,7 @@ module ID_EXE(
             reg_write_addr <= reg_write_addr_in;
             sa <= sa_in;
             extended_data <= extended_data_in;
+            RegWE_temp <= RegWE;
         end
     end
     
@@ -102,4 +107,5 @@ module ID_EXE(
     assign reg_write_addr_out = reg_write_addr;
     assign sa_out = sa;
     assign extended_data_out = extended_data;
+    assign RegWE_out = RegWE_temp;
 endmodule

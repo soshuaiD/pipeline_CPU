@@ -25,7 +25,7 @@ module reg_file(
     input rst,
     input [4:0] read_addr1,
     input [4:0] read_addr2,
-    input reg_we,
+    input RegWE,
     input [4:0] write_addr,
     input [4:0] collision_addr,
     input [31:0] write_data,
@@ -69,7 +69,7 @@ module reg_file(
     
     always @(posedge clk)
     begin
-        if (reg_we)
+        if (RegWE)
         begin
             registers[write_addr] <= write_data;
         end
