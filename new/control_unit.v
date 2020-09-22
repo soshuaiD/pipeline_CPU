@@ -27,7 +27,8 @@ module control_unit(
     input [4:0] rd_zero,
     input [5:0] func,
     input [1:0] zero,
-    // input [31:0] rt_zero,
+    
+    input [31:0] rt_zero,
     input [1:0] pause_in,
     
     output [`PFU_OP_LENGTH-1:0] PCsrc,
@@ -115,7 +116,7 @@ module control_unit(
                       instr_addiu || instr_aui || instr_lui ||
                       instr_lw || instr_sw)? `ALU_OP_ADD:
                       (instr_and || instr_andi)? `ALU_OP_AND:
-                      (instr_movn || instr_movz)? `ALU_OP_MOV:
+                       ((instr_movn && rt_zero!=0)|| (instr_movz && rt_zero==0))? `ALU_OP_MOV:
                       (instr_nor)? `ALU_OP_NOR:
                       (instr_or || instr_ori)? `ALU_OP_OR:
                       (instr_sll || instr_sllv)? `ALU_OP_SLL:

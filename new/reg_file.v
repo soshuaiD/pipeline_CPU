@@ -30,6 +30,7 @@ module reg_file(
     input [4:0] collision_addr,
     input [31:0] write_data,
     input [`ALUopnd2_LENGTH-1:0] ALUopnd2src,
+    input [5:0] opcode,
 
     output [31:0] read_data1,
     output [31:0] read_data2,
@@ -86,7 +87,7 @@ module reg_file(
     assign pause_rs = (collision1 && (read_addr1!=0))? 1:0;
 
     wire collision2 = (buffer1==read_addr2||buffer2==read_addr2||buffer3==read_addr2);
-    assign pause_rt = (collision2 && (read_addr2!=0) && ALUopnd2src==`ALUopnd2_RT)? 1:0;
+    assign pause_rt = (collision2 && (read_addr2!=0) && (ALUopnd2src==`ALUopnd2_RT||opcode==6'b000101||opcode==6'b000100))? 1:0;
 
     // wire [`PAUSE_LENGTH-1:0] pause_tmp = (pause_rs && pause_rt)? `PAUSE_BOTH:
     //                                      (pause_rs)? `PAUSE_RS:
@@ -95,5 +96,6 @@ module reg_file(
     //                                      (pause_rs == 1)? 2'b10:
     //                                      (pause_rt == 1)? 2'b01:2'b00;
     assign pause = {pause_rt,pause_rs};
-    wire zgz = 1;
+    wire [`PAUSE_LENGTH-1:0] zgz = pause;
+    wire [4:0]temp = read_addr1;
 endmodule

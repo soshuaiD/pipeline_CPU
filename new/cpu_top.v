@@ -96,12 +96,12 @@ wire [`PAUSE_LENGTH-1:0 ] pause;
 wire[4:0] reg_dst;
 wire RegWE_out3;
 
-
+wire[`ALU_OP_LENGTH-1:0] ALUop;
 wire[`BRANCH_LENGTH-1:0] zero;
 branch_judge u_branch_judge(
         .rs_data(reg_data1),
         .rt_data(reg_data2),
-        // .branch_control(ALUop),
+        .branch_control(ALUop),
 
         .zero(zero)
     );
@@ -114,7 +114,7 @@ wire DataMemWe;
 wire [`ALUopnd1_LENGTH-1:0] ALUopnd1src;
 wire [`ALUopnd2_LENGTH-1:0] ALUopnd2src;
 wire [`EXTEND_LENGTH-1:0] ExtOp;
-wire[`ALU_OP_LENGTH-1:0] ALUop;
+
 
 control_unit u_control_unit(
     .opcode(opcode),
@@ -122,6 +122,7 @@ control_unit u_control_unit(
     .rd_zero(rd),
     .func(func),
     .zero(zero),
+    .rt_zero(reg_data2),
     .pause_in(pause),
     
     .PCsrc(PCsrc),
@@ -146,7 +147,8 @@ reg_file u_reg_file(
     .collision_addr(reg_dst),
     .write_data(write_data),
     .ALUopnd2src(ALUopnd2src),
-
+    .opcode(opcode),
+    
     .read_data1(reg_data1),
     .read_data2(reg_data2),
     .pause(pause)
