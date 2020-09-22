@@ -29,6 +29,7 @@ module reg_file(
     input [4:0] write_addr,
     input [4:0] collision_addr,
     input [31:0] write_data,
+    input [`ALUopnd2_LENGTH-1:0] ALUopnd2src,
 
     output [31:0] read_data1,
     output [31:0] read_data2,
@@ -79,12 +80,20 @@ module reg_file(
     assign read_data2 = registers[read_addr2];
     
     wire pause_rs, pause_rt;
-    assign pause_rs = ((buffer1==read_addr1||buffer2==read_addr1||buffer3==read_addr1)
-                        && (read_addr1!=0))? 1:0;
-    assign pause_rt = ((buffer1==read_addr2||buffer2==read_addr2||buffer3==read_addr2)
-                        && (read_addr2!=0))? 1:0;
-    assign pause = (pause_rs && pause_rt)? `PAUSE_BOTH:
-                   (pause_rs)? `PAUSE_RS:
-                   (pause_rt)? `PAUSE_RT:`PAUSE_NO;
-                 
+    wire collision1 = (buffer1==read_addr1||
+                        buffer2==read_addr1||
+                        buffer3==read_addr1);
+    assign pause_rs = (collision1 && (read_addr1!=0))? 1:0;
+
+    wire collision2 = (buffer1==read_addr2||buffer2==read_addr2||buffer3==read_addr2);
+    assign pause_rt = (collision2 && (read_addr2!=0) && ALUopnd2src==`ALUopnd2_RT)? 1:0;
+
+    // wire [`PAUSE_LENGTH-1:0] pause_tmp = (pause_rs && pause_rt)? `PAUSE_BOTH:
+    //                                      (pause_rs)? `PAUSE_RS:
+    //                                      (pause_rt)? `PAUSE_RT:`PAUSE_NO;
+    // wire [`PAUSE_LENGTH-1:0] pause_tmp = (pause_rs == 1 && pause_rt == 1)? 2'b11:
+    //                                      (pause_rs == 1)? 2'b10:
+    //                                      (pause_rt == 1)? 2'b01:2'b00;
+    assign pause = {pause_rt,pause_rs};
+    wire zgz = 1;
 endmodule

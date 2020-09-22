@@ -34,32 +34,32 @@ wire [31:0] PCout;
 wire pause_out;
 
 PC U_PC(
-	.clk(clk),
-	.rst(rst),
-	.PCin(PCin),
+    .clk(clk),
+    .rst(rst),
+    .PCin(PCin),
     .pause(pause_out),
 
-	.PCout(PCout)
-	);
+    .PCout(PCout)
+    );
 
 wire[31:0] instruction;
 
 IMem U_IMem(
-	.instruction_addr(PCout[11:2]),
+    .instruction_addr(PCout[11:2]),
 
-	.instruction(instruction)
-	);
+    .instruction(instruction)
+    );
 
 wire [31:0] instruction_out;
 
 IF_ID U_IF_ID(
-	.clk(clk),
-	.rst(rst),
-	.InstIn(instruction),
-	.pause(pause_out),
+    .clk(clk),
+    .rst(rst),
+    .InstIn(instruction),
+    .pause(pause_out),
 
-	.InstOut(instruction_out)
-	);
+    .InstOut(instruction_out)
+    );
 
 //Stage 2:instrution decode
 //include modules:instruction decoder, control unit, register file, reg_dst_mux, extend, branch_judge
@@ -73,7 +73,7 @@ wire [5:0] func;
 wire [15:0] imm_16;
 
 instr_decoder u_instr_decoder(
-	.InstIn(instruction_out),
+    .InstIn(instruction_out),
     
     .instr_index(instr_index),
     .opcode(opcode),
@@ -83,7 +83,7 @@ instr_decoder u_instr_decoder(
     .sa(sa),
     .func(func),
     .immediate(imm_16)
-	);
+    );
 
 
 wire [4:0]  reg_write_addr_out3;
@@ -95,21 +95,6 @@ wire [31:0] reg_data2;
 wire [`PAUSE_LENGTH-1:0 ] pause;
 wire[4:0] reg_dst;
 wire RegWE_out3;
-
-reg_file u_reg_file(
-    .clk(clk),
-    .rst(rst),
-    .read_addr1(rs),
-    .read_addr2(rt),
-    .RegWE(RegWE_out3),
-    .write_addr(reg_write_addr_out3),
-    .collision_addr(reg_dst),
-    .write_data(write_data),
-
-    .read_data1(reg_data1),
-    .read_data2(reg_data2),
-    .pause(pause)
-    );
 
 
 wire[`BRANCH_LENGTH-1:0] zero;
@@ -150,38 +135,54 @@ control_unit u_control_unit(
     .ExtOp(ExtOp),
     .pause_out(pause_out)
     );
+    
+reg_file u_reg_file(
+    .clk(clk),
+    .rst(rst),
+    .read_addr1(rs),
+    .read_addr2(rt),
+    .RegWE(RegWE_out3),
+    .write_addr(reg_write_addr_out3),
+    .collision_addr(reg_dst),
+    .write_data(write_data),
+    .ALUopnd2src(ALUopnd2src),
+
+    .read_data1(reg_data1),
+    .read_data2(reg_data2),
+    .pause(pause)
+    );
 
 wire[31:0] PCplus8;
 
 PFU u_PFU(
-	.PCold(PCout),
-	.imm_16(imm_16),
-	.imm_26(instr_index),
-	.rs_data(reg_data1),
-	.PCsrc(PCsrc),
+    .PCold(PCout),
+    .imm_16(imm_16),
+    .imm_26(instr_index),
+    .rs_data(reg_data1),
+    .PCsrc(PCsrc),
 
-	.PCnew(PCin),
-	.PCplus8(PCplus8)
-	);
+    .PCnew(PCin),
+    .PCplus8(PCplus8)
+    );
 
 
 
 reg_dst_mux u_reg_dst_mux(
-	.rt(rt),
-	.rd(rd),
-	.WriteRegSrc(WriteRegSrc),
+    .rt(rt),
+    .rd(rd),
+    .WriteRegSrc(WriteRegSrc),
 
-	.reg_dst(reg_dst)
-	);
+    .reg_dst(reg_dst)
+    );
 
 wire[31:0] ext_data;
 
 extend u_extend(
-	.ExtOp(ExtOp),
-	.data(imm_16),
+    .ExtOp(ExtOp),
+    .data(imm_16),
 
-	.ext_data(ext_data)
-	);
+    .ext_data(ext_data)
+    );
 
 wire RegWE_out1;
 wire [`WDATA_SRC_LENGTH-1:0] WriteDataSrc_out1;
@@ -230,22 +231,22 @@ ID_EXE u_ID_EXE(
  wire[31:0] ALU_opnd1;
 
  ALU_opnd1_mux u_ALU_opnd1_mux(
-		.sa(sa_out),
-		.regData(reg1data_out),
-		.ALUopnd1src(ALUopnd1src_out),
+        .sa(sa_out),
+        .regData(reg1data_out),
+        .ALUopnd1src(ALUopnd1src_out),
 
-		.ALU_opnd1(ALU_opnd1)
-	);
+        .ALU_opnd1(ALU_opnd1)
+    );
 
 wire[31:0] ALU_opnd2;
 
 ALU_opnd2_mux u_ALU_opnd2_mux(
-		.regData(reg2data_out1),
-		.imm_32(extended_data_out),
-		.ALUopnd2src(ALUopnd2src_out),
+        .regData(reg2data_out1),
+        .imm_32(extended_data_out),
+        .ALUopnd2src(ALUopnd2src_out),
 
-		.ALU_opnd2(ALU_opnd2)
-	);
+        .ALU_opnd2(ALU_opnd2)
+    );
 
 wire[31:0] ALURes;
 
@@ -291,7 +292,7 @@ dataMem u_dataMem(
     .DataMemAddr(ALURes_out),
     .DataMemIn(reg2data_out2),
 
-  	.DataMemOut(dataMem)
+    .DataMemOut(dataMem)
     );
 
 wire [31:0] dataMemOut;
@@ -301,7 +302,7 @@ wire [`WDATA_SRC_LENGTH-1:0]  WriteDataSrc_out3;
 
 
 MEM_WB u_MEM_WB(
-	.clk(clk),
+    .clk(clk),
     .rst(rst),
     .dataMemIn(dataMem),
     .ALUResIn(ALURes_out),
@@ -316,16 +317,16 @@ MEM_WB u_MEM_WB(
     .WriteDataSrcOut(WriteDataSrc_out3),
     .WriteRegAddrOut(reg_write_addr_out3),
     .RegWE_out(RegWE_out3)
-	);
+    );
 
 
 reg_src_mux u_reg_src_mux(
-	.ALURes(ALUResOut),
-	.MemData(dataMemOut),
-	.PCplus8(PCplus8Out),
-	.reg_src_signal(WriteDataSrc_out3),
+    .ALURes(ALUResOut),
+    .MemData(dataMemOut),
+    .PCplus8(PCplus8Out),
+    .reg_src_signal(WriteDataSrc_out3),
 
-	.mux_out(write_data)
-	);
+    .mux_out(write_data)
+    );
 
 endmodule
