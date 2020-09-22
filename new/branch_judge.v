@@ -21,13 +21,13 @@
 
 
 module branch_judge(
-        input [31:0] rs_data,
-        input [31:0] rt_data,
+        input signed [31:0] rs_data,
+        input signed [31:0] rt_data,
         input [`ALU_OP_LENGTH-1:0] branch_control,
         
         output [1:0] zero
     );
-    wire [31:0] rt_data_temp = (branch_control == `ALU_OP_CMP0)? `INIT_32:rt_data;
+    wire signed [31:0] rt_data_temp = (branch_control == `ALU_OP_CMP0)? `INIT_32:rt_data;
     assign zero = 
                     (rs_data == rt_data_temp)? `BRANCH_EQUAL:
                     (rs_data < rt_data_temp)? `BRANCH_LT:
