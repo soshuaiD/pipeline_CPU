@@ -22,9 +22,9 @@
 
 module ALU (
     input wire [3:0] ALUop,
-    input wire [31:0] ALUopnd1,
+    input wire signed [31:0] ALUopnd1,
     //rs或sa
-    input wire [31:0] ALUopnd2,
+    input wire signed [31:0] ALUopnd2,
     //rt或扩展单??
     output wire [31:0] ALURes
 );
