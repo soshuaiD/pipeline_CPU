@@ -37,6 +37,13 @@ assign sa = ALUopnd1[4:0];
 wire [31:0] diff;
 assign diff = (ALUopnd1 < ALUopnd2) ? 32'h0000_0001 : 32'h0000_0000;
 
+wire unsigned [31:0] unsigned_ALUopnd1;
+wire unsigned [31:0] unsigned_ALUopnd2;
+
+assign unsigned_ALUopnd1 = ALUopnd1;
+assign unsigned_ALUopnd2 = ALUopnd2;
+assign unsigned_diff = (unsigned_ALUopnd1 < unsigned_ALUopnd2) ? 32'h0000_0001 : 32'h0000_0000;
+
 always @(*) begin
     case (ALUop)
         `ALU_OP_ADD   : temp <= ALUopnd1 + ALUopnd2;
@@ -59,7 +66,7 @@ always @(*) begin
         // end else begin
         //     temp <= 5'b00000;
         // end
-        `ALU_OP_SLTU  : temp <= diff;
+        `ALU_OP_SLTU  : temp <= unsigned_diff;
         // if (ALUopnd2 == 5'b00000) begin
         //     temp <= ALUopnd1;
         //     // 这里alu只是返回gpr[rs]的???？
