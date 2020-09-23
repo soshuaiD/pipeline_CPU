@@ -87,7 +87,8 @@ module reg_file(
     assign pause_rs = (collision1 && (read_addr1!=0))? 1:0;
 
     wire collision2 = (buffer1==read_addr2||buffer2==read_addr2||buffer3==read_addr2);
-    assign pause_rt = (collision2 && (read_addr2!=0) && (ALUopnd2src==`ALUopnd2_RT||opcode==6'b000101||opcode==6'b000100))? 1:0;
+    assign pause_rt = (collision2 && (read_addr2!=0) && (ALUopnd2src==`ALUopnd2_RT||
+                        opcode==6'b101011||opcode==6'b000101||opcode==6'b000100))? 1:0;
 
     // wire [`PAUSE_LENGTH-1:0] pause_tmp = (pause_rs && pause_rt)? `PAUSE_BOTH:
     //                                      (pause_rs)? `PAUSE_RS:

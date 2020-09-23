@@ -178,11 +178,11 @@ module control_unit(
                          instr_movz||instr_nor||instr_or||instr_sllv||
                          instr_srlv||instr_srav||instr_slt||instr_sltu||
                          instr_sub||instr_subu||instr_xor||instr_beq||
-                         instr_bne)&&(pause_in!=`PAUSE_NO))? 1:
+                         instr_bne||instr_sw)&&(pause_in!=`PAUSE_NO))? 1:
                        ((instr_addi||instr_addiu||instr_andi||instr_aui||
                          instr_bltz||instr_blez||instr_bgtz||instr_bgez||
                          instr_lui||instr_lw||instr_ori||instr_slti||
-                         instr_sltiu||instr_sw||instr_xori)
+                         instr_sltiu||instr_xori)
                          &&(pause_in==`PAUSE_RS))? 1:
                        ((instr_sll||instr_srl||instr_sra)
                          &&(pause_in==`PAUSE_RT))? 1:0;

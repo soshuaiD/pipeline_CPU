@@ -38,8 +38,5 @@ module dataMem(
         if (DataMemWe) begin
             data_mem[DataMemAddr[11:2]] <= DataMemIn;
         end
-        else begin
-            data_mem[DataMemAddr[11:2]] <= `INIT_32;
-        end
     end
 endmodule
