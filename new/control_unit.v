@@ -89,7 +89,7 @@ module control_unit(
     assign instr_bltz = (opcode==`INSTR_BLTZ_BGEZ && rt_code==5'b00000)? 1:0;
     assign instr_blez = (opcode==`INSTR_BLEZ)? 1:0;
     assign instr_bgtz = (opcode==`INSTR_BGTZ)? 1:0;
-    assign instr_bgez = (opcode==`INSTR_BLTZ_BGEZ && rt_code!=5'b00001)? 1:0;
+    assign instr_bgez = (opcode==`INSTR_BLTZ_BGEZ && rt_code==5'b00001)? 1:0;
     assign instr_lui = (opcode==`INSTR_LUI)? 1:0;
     assign instr_lw = (opcode==`INSTR_LW)? 1:0;
     assign instr_ori = (opcode==`INSTR_ORI)? 1:0;
