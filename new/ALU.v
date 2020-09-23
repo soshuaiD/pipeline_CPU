@@ -50,7 +50,9 @@ always @(*) begin
 
         `ALU_OP_SLL   : temp <= ALUopnd2 << sa; //¬ﬂº≠◊Û“∆
         `ALU_OP_SRL   : temp <= ALUopnd2 >> sa; //¬ﬂº≠”““∆
-        `ALU_OP_SRA   : temp <= (ALUopnd2 << (~sa)) | (ALUopnd2 >> sa); //À„ ˝”““∆
+        // `ALU_OP_SRA   : temp <= ALUopnd2 << (~sa)) | (ALUopnd2 >> sa); //À„ ˝”““∆
+        `ALU_OP_SRA   : temp <=
+        ({{31{ALUopnd2[31]}}, 1'b0} << (~sa)) | (ALUopnd2 >> sa);
         `ALU_OP_SLT   : temp <= diff;
         // if (ALUopnd2 > ALUopnd1) begin
         //     temp <= 5'b11111;
