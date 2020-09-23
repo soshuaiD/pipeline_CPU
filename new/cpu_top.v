@@ -197,6 +197,7 @@ wire [31:0] reg2data_out1;
 wire [4:0] reg_write_addr_out1;
 wire [4:0] sa_out;
 wire [31:0] extended_data_out;
+wire [31:0] PCplus8_out1;
 
 ID_EXE u_ID_EXE(
     .clk(clk),
@@ -213,6 +214,7 @@ ID_EXE u_ID_EXE(
     .sa_in(sa),
     .extended_data_in(ext_data),
     .RegWE(RegWE),
+    .PCplus8(PCplus8),
     
     .WriteDataSrc_out(WriteDataSrc_out1),
     .DataMemWE_out(DataMemWe_out1),
@@ -224,7 +226,8 @@ ID_EXE u_ID_EXE(
     .reg_write_addr_out(reg_write_addr_out1),
     .sa_out(sa_out),
     .extended_data_out(extended_data_out),
-    .RegWE_out(RegWE_out1)
+    .RegWE_out(RegWE_out1),
+    .PCplus8_out(PCplus8_out1)
     );
 
 
@@ -266,6 +269,7 @@ ALU u_ALU(
  wire [31:0] reg2data_out2;
  wire [4:0] reg_write_addr_out2;
  wire RegWE_out2;
+ wire [31:0] PCplus8_out2;
 
 EXE_MEM u_EXE_MEM(
     .clk(clk),
@@ -277,13 +281,15 @@ EXE_MEM u_EXE_MEM(
     .Reg2DataOut(reg2data_out1),
     .WriteRegSrc(reg_write_addr_out1),
     .RegWE(RegWE_out1),
+    .PCplus8(PCplus8_out1),
 
     .DataMemWE_out(DataMemWe_out2),
     .WriteDataSrc_out(WriteDataSrc_out2),
     .ALURes_out(ALURes_out),
     .WriteRegSrc_out(reg_write_addr_out2),
     .Reg2DataOut_out(reg2data_out2),
-    .RegWE_out(RegWE_out2)
+    .RegWE_out(RegWE_out2),
+    .PCplus8_out(PCplus8_out2)
 );
 
 wire[31:0] dataMem;
@@ -301,6 +307,7 @@ wire [31:0] dataMemOut;
 wire [31:0] ALUResOut;
 wire [31:0] PCplus8Out;
 wire [`WDATA_SRC_LENGTH-1:0]  WriteDataSrc_out3;
+wire [31:0] PCplus8_out3;
 
 
 MEM_WB u_MEM_WB(
@@ -308,24 +315,26 @@ MEM_WB u_MEM_WB(
     .rst(rst),
     .dataMemIn(dataMem),
     .ALUResIn(ALURes_out),
-    .PCplus8In(PCplus8),
+    // .PCplus8In(PCplus8),
     .WriteDataSrcIn(WriteDataSrc_out2),
     .WriteRegAddrIn(reg_write_addr_out2),
     .RegWE(RegWE_out2),
+    .PCplus8(PCplus8_out2),
 
     .dataMemOut(dataMemOut),
     .ALUResOut(ALUResOut),
-    .PCplus8Out(PCplus8Out),
+    // .PCplus8Out(PCplus8Out),
     .WriteDataSrcOut(WriteDataSrc_out3),
     .WriteRegAddrOut(reg_write_addr_out3),
-    .RegWE_out(RegWE_out3)
+    .RegWE_out(RegWE_out3),
+    .PCplus8_out(PCplus8_out3)
     );
 
 
 reg_src_mux u_reg_src_mux(
     .ALURes(ALUResOut),
     .MemData(dataMemOut),
-    .PCplus8(PCplus8Out),
+    .PCplus8(PCplus8_out3),
     .reg_src_signal(WriteDataSrc_out3),
 
     .mux_out(write_data)

@@ -25,17 +25,19 @@ module MEM_WB(
     input wire       rst,
     input wire[31:0] dataMemIn,
     input wire[31:0] ALUResIn,
-    input wire[31:0] PCplus8In,
+    // input wire[31:0] PCplus8In,
     input wire[1:0]  WriteDataSrcIn,
     input wire[4:0]  WriteRegAddrIn,
     input wire RegWE,
+    input wire[31:0] PCplus8,
 
     output reg[31:0] dataMemOut,
     output reg[31:0] ALUResOut,
-    output reg[31:0] PCplus8Out,
+    // output reg[31:0] PCplus8Out,
     output reg[1:0]  WriteDataSrcOut,
     output reg[4:0]  WriteRegAddrOut,
-    output reg RegWE_out
+    output reg RegWE_out,
+    output reg [31:0] PCplus8_out
     );
 
     always @(posedge clk) begin
@@ -43,18 +45,20 @@ module MEM_WB(
             // reset
             dataMemOut <= `INIT_32;
             ALUResOut <= `INIT_32;
-            PCplus8Out <= `INIT_32;
+            // PCplus8Out <= `INIT_32;
             WriteDataSrcOut <= `INIT_2;
             WriteRegAddrOut <= `INIT_5;
             RegWE_out       <= 1'b0;
+            PCplus8_out     <= `INIT_32;
         end
         else begin
             dataMemOut <= dataMemIn;
             ALUResOut <= ALUResIn;
-            PCplus8Out <= PCplus8In;
+            // PCplus8Out <= PCplus8In;
             WriteDataSrcOut <= WriteDataSrcIn;
             WriteRegAddrOut <= WriteRegAddrIn;
             RegWE_out       <= RegWE;
+            PCplus8_out     <= PCplus8;
         end
     end
 endmodule
